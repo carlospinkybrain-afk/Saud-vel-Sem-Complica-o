@@ -1,7 +1,12 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { FoodItem, MealPlanResponse } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const apiKey = process.env.API_KEY;
+if (!apiKey) {
+  console.error("ERRO CRÍTICO: API_KEY não encontrada. Verifique as variáveis de ambiente no Vercel.");
+}
+
+const ai = new GoogleGenAI({ apiKey: apiKey || 'dummy-key-to-prevent-crash' });
 
 export const generateMealPlan = async (
   bmr: number,
@@ -10,6 +15,11 @@ export const generateMealPlan = async (
   goal: 'maintenance' | 'weight_loss' | 'muscle_gain' = 'maintenance'
 ): Promise<MealPlanResponse | null> => {
   
+  if (!process.env.API_KEY) {
+    console.error("Tentativa de gerar plano sem API KEY configurada.");
+    return null;
+  }
+
   const foodNames = selectedFoods.map(f => f.name).join(", ");
   
   let ingredientsInstruction = "";
