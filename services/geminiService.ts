@@ -6,6 +6,7 @@ if (!apiKey) {
   console.error("ERRO CRÍTICO: API_KEY não encontrada. Verifique as variáveis de ambiente no Vercel.");
 }
 
+// Use a dummy key if missing to prevent immediate crash on load, but real calls will fail/log
 const ai = new GoogleGenAI({ apiKey: apiKey || 'dummy-key-to-prevent-crash' });
 
 export const generateMealPlan = async (
